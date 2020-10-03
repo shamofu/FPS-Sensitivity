@@ -28,4 +28,76 @@
 \begin{document}
 \maketitle
 
+\section{緒論}
+Rainbow Six: Siege（以下，R6S）では，Year 5 Season 3 ``Shadow Legacy''（以下，Y5S3）にて様々な倍率サイトが追加された．
+併せて，各倍率サイト毎に感度を設定できるようになり，センシティビティの計算式も変更された．
+なお，感度はゲーム内の設定値，センシティビティはマウスとエイムの比例定数を指すこととする．
+ここでは，センシティビティの計算式がどう変更されたか示し，新たに導入された視覚運動ゲインについて解説する．
+
+\section{センシティビティ計算式}
+\subsection{Y5S3以前}
+Y5S3以前のセンシティビティ計算式は以下に示す．
+\begin{align}
+  \begin{split}
+    \mathrm{Sensitivity} = \mathrm{DPI} &\times \mathrm{HipFire} \times \mathrm{MouseSensitivityMultiplierUnit} \\
+    &\times \mathrm{ADS}_{\mathrm{old}} \times \mathrm{XFactorAiming} \times \mathrm{ADSMultiplier}
+  \end{split}
+  \label{oldsensi}
+\end{align}
+\(\mathrm{DPI}\)はマウスのDPI，\(\mathrm{HipFire}\)は腰撃ち感度，\(\mathrm{ADS}_{\mathrm{old}}\)は旧感度である．
+また，\(\mathrm{MouseSensitivityMultiplierUnit}\)及び\(\mathrm{XFactorAiming}\)は既定値\(0.02\)をとる．
+\(\mathrm{ADSMultiplier}\)は各倍率サイトによって異なる定数をとり，等倍サイトで\(0.6\)，ACOGサイト（3倍サイト）で\(0.35\)をとる．
+
+従って，\(\mathrm{HipFire}\)をある値に決めた場合，\(\mathrm{ADS}_{\mathrm{old}} \times \mathrm{XFactorAiming} \times \mathrm{ADSMultiplier}\)を計算することで，各サイト使用時の振り向き距離が腰撃ち時の何倍になるかがわかる．
+
+\subsection{Y5S3以降}
+Y5S3以降のセンシティビティ計算式を以下に示す．
+\begin{align}
+  \begin{split}
+    \mathrm{Sensitivity} = \mathrm{DPI} &\times \mathrm{HipFire} \times \mathrm{MouseSensitivityMultiplierUnit} \\
+    &\times \mathrm{ADS}_{\mathrm{new}} \times \mathrm{XFactorAiming} \times \mathrm{FOVAdjustment}
+  \end{split}
+  \label{newsensi}
+\end{align}
+\(\mathrm{ADS}_{\mathrm{new}}\)は新感度，\(\mathrm{FOVAdjustment}\)は視野角調整率である．
+式\eqref{oldsensi}と比較すると，\(\mathrm{ADS}_{\mathrm{old}}\)が\(\mathrm{ADS}_{\mathrm{new}}\)となり，\(\mathrm{ADSMultiplier}\)が廃止された代わりに\(\mathrm{FOVAdjustment}\)が導入されている．
+
+\section{視野角調整率}
+Y5S3にて新しく導入された視野角調整率について解説する．
+まず，視野角調整率は以下の式で算出される．
+\begin{align}
+  \mathrm{FOVAdjustment} = \frac{\tan \left(\frac{\mathrm{FOVMultiplier} \times \mathrm{VerticalFOV}}{2}\right)}{\tan \left(\frac{\mathrm{VerticalFOV}}{2}\right)}
+  \label{fova}
+\end{align}
+\(\mathrm{FOVMultiplier}\)は視野角倍率であり，表\ref{fovmp}によって定められる．
+\(\mathrm{VerticalFOV}\)は垂直視野角である．
+ちなみに，R6Sにおいてゲーム内で設定しているのは垂直視野角である．
+Apex Legendsでは水平視野角を採用しており，ゲームによって視野角の定義が異なるため注意が必要である．
+
+\begin{table}[htbp]
+  \centering
+  \caption{\(\mathrm{FOVMultiplier}\)の定義}
+  \label{fovmp}
+  \begin{tabular}{c|c}
+    倍率サイト & \(\mathrm{FOVMultiplier}\) \\ \hline
+    x1.0 & 0.9 \\
+    x1.5 & 0.59 \\
+    x2.0 & 0.49 \\
+    x2.5 & 0.42 \\
+    x3.0 & 0.35 \\
+    x4.0 & 0.3 \\
+    x5.0 & 0.22 \\
+    x12.0 & 0.092
+  \end{tabular}
+\end{table}
+
+視野角調整率の目的は，覗く倍率サイトに依らず，マウスを一定距離動かせば画面上で動く距離も一定にすることにある．
+即ち，画面端をエイムするために必要なマウスの移動距離がサイトの倍率に依らないということである．
+
+このことは，式\eqref{fova}から簡単にわかる．
+例えば2倍サイトを覗くとき，表\ref{fovmp}よりR6Sでは視野角が\(0.49\)倍される．
+\(\tan \left(\frac{\mathrm{VerticalFOV}}{2}\right)\)は腰撃ち時の視野の高さ，\(\tan \left(\frac{0.49 \times \mathrm{VerticalFOV}}{2}\right)\)は2倍サイト使用時の視野の高さなのだから，その比を感度に掛けることで，画面上端をエイムするために必要なマウスの移動距離を一定にできる．
+
+式\eqref{newsensi}において\(\mathrm{XFactorAiming}\)は基本的に\(0.02\)であるから，全ての倍率サイトにおける\(\mathrm{ADS}_{\mathrm{new}}\)を\(50\)に設定すると，腰撃ちのセンシティビティに\(\mathrm{FOVAdjustment}\)を掛けたものがその倍率サイトのセンシティビティとなり，操作性が一貫する．
+
 \end{document}
