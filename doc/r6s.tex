@@ -117,7 +117,7 @@ Apex Legendsでは水平視野角を採用しており，ゲームによって�
   \mathrm{HorizontalFOVMultiplier} = \frac{\arctan \left\{\tan \left(\frac{\mathrm{FOVMultiplier} \times \mathrm{VerticalFOV}}{2}\right) \times \frac{16}{9}\right\}}{\arctan \left\{\tan \left(\frac{\mathrm{VerticalFOV}}{2}\right) \times \frac{16}{9}\right\}}
 \end{align}
 となる．
-\(\mathrm{FOVMultiplier}\)と加重平均をとり
+\(\mathrm{FOVMultiplier}\)との加重平均をとり
 \begin{align}
   \mathrm{FOVAdjustment}_{\mathrm{new}} = \frac{16 \times \mathrm{HorizontalFOVMultiplier} + 9 \times \mathrm{FOVMultiplier}}{16 + 9}.
 \end{align}
