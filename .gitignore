@@ -1,1 +1,22 @@
+# Rust
 /target
+
+# LaTeX
+*.aux
+*.dvi
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.synctex(busy)
+*.nav
+*.snm
+*.bib
+*.bbl
+*.blg
+*.idx
+*.ilg
+*.ind
+*.pdf
