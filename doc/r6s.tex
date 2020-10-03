@@ -46,7 +46,7 @@ Y5S3以前のセンシティビティ計算式は以下に示す．
 \end{align}
 \(\mathrm{DPI}\)はマウスのDPI，\(\mathrm{HipFire}\)は腰撃ち感度，\(\mathrm{ADS}_{\mathrm{old}}\)は旧感度である．
 また，\(\mathrm{MouseSensitivityMultiplierUnit}\)及び\(\mathrm{XFactorAiming}\)は既定値\(0.02\)をとる．
-\(\mathrm{ADSMultiplier}\)は各倍率サイトによって異なる定数をとり，等倍サイトで\(0.6\)，ACOGサイト（3倍サイト）で\(0.35\)をとる．
+\(\mathrm{ADSMultiplier}\)は各倍率サイトによって異なる定数をとり，等倍サイトで\(0.6\)，ACOGサイト（2.5倍と言われていたが，実際は3倍）で\(0.35\)をとる．
 
 従って，\(\mathrm{HipFire}\)をある値に決めた場合，\(\mathrm{ADS}_{\mathrm{old}} \times \mathrm{XFactorAiming} \times \mathrm{ADSMultiplier}\)を計算することで，各サイト使用時の振り向き距離が腰撃ち時の何倍になるかがわかる．
 
@@ -98,6 +98,6 @@ Apex Legendsでは水平視野角を採用しており，ゲームによって�
 例えば2倍サイトを覗くとき，表\ref{fovmp}よりR6Sでは視野角が\(0.49\)倍される．
 \(\tan \left(\frac{\mathrm{VerticalFOV}}{2}\right)\)は腰撃ち時の視野の高さ，\(\tan \left(\frac{0.49 \times \mathrm{VerticalFOV}}{2}\right)\)は2倍サイト使用時の視野の高さなのだから，その比を感度に掛けることで，画面上端をエイムするために必要なマウスの移動距離を一定にできる．
 
-式\eqref{newsensi}において\(\mathrm{XFactorAiming}\)は基本的に\(0.02\)であるから，全ての倍率サイトにおける\(\mathrm{ADS}_{\mathrm{new}}\)を\(50\)に設定すると，腰撃ちのセンシティビティに\(\mathrm{FOVAdjustment}\)を掛けたものがその倍率サイトのセンシティビティとなり，操作性が一貫する．
+式\eqref{newsensi}において\(\mathrm{XFactorAiming}\)は基本的に\(0.02\)であるから，全ての倍率サイトにおける\(\mathrm{ADS}_{\mathrm{new}}\)を\(50\)に設定すると，腰撃ちのセンシティビティに\(\mathrm{FOVAdjustment}\)を掛けたものがその倍率サイトのセンシティビティとなり，操作性が一貫する……はずなのだが，現状，感度を50に設定しても操作性は一貫せず，\(\mathrm{FOVAdjustment}\)の定義が不正確であると考えられる．
 
 \end{document}
