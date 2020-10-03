@@ -48,7 +48,7 @@ deploy:
     commit_message: ${TRAVIS_COMMIT_MESSAGE}
     target_branch: travis/latexmk
     on:
-      branch: master
+      branch: main
 branches:
   except:
     - travis/latexmk
