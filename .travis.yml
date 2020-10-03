@@ -1,0 +1,56 @@
+language: rust
+rust:
+  - stable
+os: osx
+osx_image: xcode12u
+env:
+  global:
+    - HOMEBREW_NO_INSTALL_CLEANUP=TRUE
+before_cache:
+  - sudo find $HOME/texlive -name "*.log" -type f -delete
+  - sudo find $HOME/.texlive -name "*.log" -type f -delete
+  - sudo find $HOME/texlive -name "ls-R" -type f -delete
+  - sudo find $HOME/.texlive -name "ls-R" -type f -delete
+cache:
+  directories:
+    - $HOME/texlive
+    - $HOME/.texlive
+before_install:
+  - brew update
+install:
+  - brew install ghostscript
+  - source ./install-texlive.sh
+  - tlmgr update --self --all --reinstall-forcibly-removed
+before_script:
+  - sudo fc-cache -fv
+  - cjk-gs-integrate --link-texmf --cleanup --force
+  - cjk-gs-integrate-macos --link-texmf --force
+  - mktexlsr
+  - kanji-config-updmap-sys --jis2004 hiragino-highsierra-pron
+  - kanji-config-updmap-sys status
+script:
+  - (cd doc && for texfile in *.tex; do
+    latexmk -silent -pdfdvi -norc -e "\$dvipdf='dvipdfmx %O -o %D %S'; \$makeindex='upmendex %O -o %D %S'; \$biber='biber %O --bblencoding=utf8 -u -U --output_safechars %B'; \$bibtex='upbibtex %O %B'; \$latex='uplatex %O -kanji=utf8 -interaction=batchmode -halt-on-error -file-line-error %S';"
+    ${texfile}; done)
+before_deploy:
+  - echo "*" > .gitignore
+  - echo "!/**/" >> .gitignore
+  - echo "!*.pdf" >> .gitignore
+deploy:
+  - provider: pages
+    strategy: git
+    edge: true
+    cleanup: false
+    token: ${GITHUB_TOKEN}
+    allow_empty_commit: true
+    committer_from_gh: true
+    keep_history: false
+    commit_message: ${TRAVIS_COMMIT_MESSAGE}
+    target_branch: travis/latexmk
+    on:
+      branch: master
+branches:
+  except:
+    - travis/latexmk
+notifications:
+  email: false
