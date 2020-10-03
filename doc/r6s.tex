@@ -98,6 +98,47 @@ Apex Legendsでは水平視野角を採用しており，ゲームによって�
 例えば2倍サイトを覗くとき，表\ref{fovmp}よりR6Sでは視野角が\(0.49\)倍される．
 \(\tan \left(\frac{\mathrm{VerticalFOV}}{2}\right)\)は腰撃ち時の視野の高さ，\(\tan \left(\frac{0.49 \times \mathrm{VerticalFOV}}{2}\right)\)は2倍サイト使用時の視野の高さなのだから，その比を感度に掛けることで，画面上端をエイムするために必要なマウスの移動距離を一定にできる．
 
-式\eqref{newsensi}において\(\mathrm{XFactorAiming}\)は基本的に\(0.02\)であるから，全ての倍率サイトにおける\(\mathrm{ADS}_{\mathrm{new}}\)を\(50\)に設定すると，腰撃ちのセンシティビティに\(\mathrm{FOVAdjustment}\)を掛けたものがその倍率サイトのセンシティビティとなり，操作性が一貫する．
+式\eqref{newsensi}において\(\mathrm{XFactorAiming}\)は基本的に\(0.02\)であるから，全ての倍率サイトにおける\(\mathrm{ADS}_{\mathrm{new}}\)を\(50\)に設定すると，腰撃ちのセンシティビティに\(\mathrm{FOVAdjustment}\)を掛けたものがその倍率サイトのセンシティビティとなり，操作性が一貫する……はずなのだが，現状，感度を50に設定しても操作性は一貫しない．
+これは，視野の変化を平面で捉える一方で，キャラクターは回転してしまうことに起因すると推察する．
+
+\section{修正視野角調整率}
+キャラクターが回転することを考慮した視野角調整率を修正視野角調整率として計算することを試みる．
+
+アスペクト比を\(16:9\)とすると，
+\begin{align}
+  \tan \left(\frac{\mathrm{HorizontalFOV}}{2}\right) \times 9 = \tan \left(\frac{\mathrm{VerticalFOV}}{2}\right) \times 16
+\end{align}
+より，
+\begin{align}
+  \mathrm{HorizontalFOV} = 2 \times \arctan \left\{\tan \left(\frac{\mathrm{VerticalFOV}}{2}\right) \times \frac{16}{9}\right\}
+\end{align}
+であるから，
+\begin{align}
+  \mathrm{HorizontalFOVMultiplier} = \frac{\arctan \left\{\tan \left(\frac{\mathrm{FOVMultiplier} \times \mathrm{VerticalFOV}}{2}\right) \times \frac{16}{9}\right\}}{\arctan \left\{\tan \left(\frac{\mathrm{VerticalFOV}}{2}\right) \times \frac{16}{9}\right\}}
+\end{align}
+となる．
+\(\mathrm{FOVMultiplier}\)と加重平均をとり
+\begin{align}
+  \mathrm{FOVAdjustment}_{\mathrm{new}} = \frac{16 \times \mathrm{HorizontalFOVMultiplier} + 9 \times \mathrm{FOVMultiplier}}{16 + 9}.
+\end{align}
+
+よって，一貫した操作性を得るには，表\ref{sugsensi}の通りに設定すればよい．
+
+\begin{table}[htbp]
+  \centering
+  \caption{操作性を一貫させる感度}
+  \label{sugsensi}
+  \begin{tabular}{c|c}
+    倍率サイト & 感度 \\ \hline
+    x1.0 & 53 \\
+    x1.5 & 62 \\
+    x2.0 & 65 \\
+    x2.5 & 67 \\
+    x3.0 & 68 \\
+    x4.0 & 69 \\
+    x5.0 & 70 \\
+    x12.0 & 71
+  \end{tabular}
+\end{table}
 
 \end{document}
